@@ -1,4 +1,4 @@
-const { User } = require("../database/models");
+const { User, Bookmark } = require("../database/models");
 
 const seedDatabase = async () => {
   await Promise.all([
@@ -13,6 +13,14 @@ const seedDatabase = async () => {
     User.create({
       username: "Kyrie John",
       password: "11111423411",
+    }),
+    Bookmark.create({
+      title: "Cheese Sandwich",
+      ingredients: "cheese",
+    }),
+    Bookmark.create({
+      title: "Best Nooodle The World",
+      ingredients: "noodle",
     }),
   ]);
 };
