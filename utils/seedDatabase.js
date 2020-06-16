@@ -1,21 +1,18 @@
-const { Campus } = require("../database/models");
+const { User } = require("../database/models");
 
 const seedDatabase = async () => {
   await Promise.all([
-    Campus.create({
-      firstName: "Kyrie",
-      lastName: "Irving",
-      jerseyNumber: 11,
+    User.create({
+      username: "Kyrie Irving",
+      password: "111111",
     }),
-    Campus.create({
-      firstName: "LeBron",
-      lastName: "James",
-      jerseyNumber: 23,
+    User.create({
+      username: "Kyrie Ma",
+      password: "11111233",
     }),
-    Campus.create({
-      firstName: "Luka",
-      lastName: "Doncic",
-      jerseyNumber: 77,
+    User.create({
+      username: "Kyrie John",
+      password: "11111423411",
     }),
   ]);
 };
