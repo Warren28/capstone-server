@@ -56,11 +56,7 @@ router.post("/", async (req, res, next) => {
   // Take the form data from the request body
   const { title, ingredients } = req.body;
   // Create a campus object
-  const bookmarkObj = {
-    title: title,
-    ingredients: ingredients,
-  };
-  ``;
+  const bookmarkObj = { ...req.body };
   try {
     // Create a new campus on the database
     const newBookmark = await Bookmark.create(bookmarkObj);
@@ -72,7 +68,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// router.get("/:id/password", async (req, res, next) => {
+// router.get("/:id/users", async (req, res, next) => {
 //   const { id } = req.params;
 //   // find the campus associated with the id
 //   let foundUsers;
@@ -94,6 +90,7 @@ router.post("/", async (req, res, next) => {
 //   } catch (err) {
 //     next(err);
 //   }
+// });
 
 // Route to handle editing a campus
 // /api/campuses/:id
@@ -102,11 +99,7 @@ router.put("/:id", async (req, res, next) => {
   // get the id from request params
   const { id } = req.params;
   // get form data from the request body
-  const { title, ingredients } = req.body;
-  const updatedObj = {
-    title: title,
-    ingredients: ingredients,
-  };
+  const updatedObj = { ...req.body };
   try {
     // if successfull:
     // Find a campus with a matching id from the database

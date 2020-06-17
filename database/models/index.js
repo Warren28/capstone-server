@@ -2,6 +2,13 @@
 
 const User = require("./userInfo");
 const Bookmark = require("./bookmark");
+
+
+User.hasMany(Bookmark);
+
+Bookmark.belongsTo(User);
+
+
 module.exports = {
   User,
   Bookmark,
