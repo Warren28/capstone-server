@@ -3,6 +3,10 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 
 const User = db.define("user", {
+  // userID: {
+  //   type: Sequelize.STRING,
+  //   primaryKey: true
+  // },
   email: {
     type: Sequelize.STRING,
     unique: true,
@@ -20,9 +24,6 @@ const User = db.define("user", {
       return () => this.getDataValue("salt");
     }
   },
-  googleId: {
-    type: Sequelize.STRING
-  }
 });
 
 User.generateSalt = function() {

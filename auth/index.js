@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../database/models");
+const { User, Bookmark } = require("../database/models");
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -32,6 +32,20 @@ router.post("/signup", async (req, res, next) => {
     else {
       next(err);
     }
+  }
+});
+
+router.get("/", async (req, res, next) => {
+  // try to get users object from database
+  try {
+    // users will be the result of the User.findAll promise
+    const users = await User.findAll({include: Bookmark});
+    // if users is valid, it will be sent as a json response
+    console.log(users);
+    res.status(200).json(users);
+  } catch (err) {
+    // if there is an error, it'll passed via the next parameter to the error handler middleware
+    next(err);
   }
 });
 

@@ -40,24 +40,29 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // A helper function to sync our database;
-const syncDatabase = () => {
-  if (process.env.NODE_ENV === "production") {
-    db.sync();
-  } else {
-    console.log("As a reminder, the forced synchronization option is on");
-    db.sync({ force: true })
-      .then(() => seedDatabase())
-      .catch((err) => {
-        if (err.name === "SequelizeConnectionError") {
-          console.log("----------------------------------------");
-          createLocalDatabase();
-          seedDatabase();
-        } else {
-          console.log(err);
-        }
-      });
-  }
-};
+// const syncDatabase = () => {
+//   if (process.env.NODE_ENV === "production") {
+//     db.sync();
+//   } else {
+//     console.log("As a reminder, the forced synchronization option is on");
+//     db.sync({ force: true })
+//       .then(() => seedDatabase())
+//       .catch((err) => {
+//         if (err.name === "SequelizeConnectionError") {
+//           console.log("----------------------------------------");
+//           createLocalDatabase();
+//           seedDatabase();
+//         } else {
+//           console.log(err);
+//         }
+//       });
+//   }
+// };
+
+const syncDb = async () => {
+  //await db.sync({ force: true });
+  await db.sync();
+}
 
 // Instantiate our express application;
 const app = express();
@@ -115,7 +120,8 @@ const configureApp = () => {
 // Main function declaration;
 const bootApp = async () => {
   await sessionStore.sync();
-  await syncDatabase();
+  //await syncDatabase();
+  await syncDb();
   await configureApp();
 };
 
