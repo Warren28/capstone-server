@@ -2,6 +2,34 @@ const express = require("express");
 const router = express.Router();
 const { User, Bookmark } = require("../database/models");
 
+router.get("/:id", async (req, res, next) => {
+  // take the id from params
+  const { id } = req.params;
+  // query the database for a campus with matching id
+
+  try {
+    // if successful:
+    //const user = await User.findByPk(id);
+    // send back the user as a response
+    const user = await User.findOne({
+      where: {id: id},
+      include: Bookmark,
+  });
+  //const user = await User.findByPk(id);
+    
+    if (user !== null){
+      //console.log(user.password);
+      res.status(200).json(user);
+    }else{
+      res.status(200).json("The user doesn't not exist!");
+    }
+  } catch (err) {
+    // if error:
+    // handle error
+    next(err);
+  }
+});
+
 router.post("/login", async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { email: req.body.email } });
@@ -62,7 +90,8 @@ router.delete("/logout", (req, res, next) => {
 });
 
 router.get("/me", (req, res) => {
-  res.json(req.user);
+  console.log(req.user);
+  res.status(200).json(req.user);
 });
 
 module.exports = router;
