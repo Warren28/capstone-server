@@ -2,12 +2,12 @@ var express = require("express");
 var router = express.Router();
 
 // Subrouters;
-const usersRouter = require("./users");
-const bookmarksRouter = require("./bookmarks.js");
+//const usersRouter = require("./users");
+const bookmarksRouter = require("./bookmarks");
 
 // Mount our subrouters to assemble our apiRouter;
 
-router.use("/users", usersRouter);
+//router.use("/users", usersRouter);
 router.use("/bookmarks", bookmarksRouter);
 
 // Error handling middleware;

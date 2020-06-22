@@ -13,6 +13,11 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const helmet = require("helmet");
 const compression = require("compression");
+const session = require("express-session");
+const passport = require("passport");
+const authRouter = require("./auth");
+const apiRouter = require("./routes");
+const cors = require("cors");
 
 // Utilities;
 const createLocalDatabase = require("./utils/createLocalDatabase");
@@ -20,26 +25,44 @@ const seedDatabase = require("./utils/seedDatabase");
 
 // Our database instance;
 const db = require("./database");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const sessionStore = new SequelizeStore({ db: db });
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await db.models.user.findByPk(id);
+    done(null, user);
+  }
+  catch (err) {
+    done(err);
+  }
+});
 
 // A helper function to sync our database;
-const syncDatabase = () => {
-  if (process.env.NODE_ENV === "production") {
-    db.sync();
-  } else {
-    console.log("As a reminder, the forced synchronization option is on");
-    db.sync({ force: true })
-      .then(() => seedDatabase())
-      .catch((err) => {
-        if (err.name === "SequelizeConnectionError") {
-          console.log("----------------------------------------");
-          createLocalDatabase();
-          seedDatabase();
-        } else {
-          console.log(err);
-        }
-      });
-  }
-};
+// const syncDatabase = () => {
+//   if (process.env.NODE_ENV === "production") {
+//     db.sync();
+//   } else {
+//     console.log("As a reminder, the forced synchronization option is on");
+//     db.sync({ force: true })
+//       .then(() => seedDatabase())
+//       .catch((err) => {
+//         if (err.name === "SequelizeConnectionError") {
+//           console.log("----------------------------------------");
+//           createLocalDatabase();
+//           seedDatabase();
+//         } else {
+//           console.log(err);
+//         }
+//       });
+//   }
+// };
+
+const syncDb = async () => {
+  //await db.sync({ force: true });
+  await db.sync();
+}
 
 // Instantiate our express application;
 const app = express();
@@ -54,11 +77,26 @@ const configureApp = () => {
   app.use(compression());
   app.use(cookieParser());
 
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+
   // Our apiRouter
-  const apiRouter = require("./routes/index");
+  // const apiRouter = require("./routes/index");
+
+  app.use(
+    session({
+      secret: "a super secretive secret key string to encrypt and sign the cookie",
+      store: sessionStore,
+      resave: false,
+      saveUninitialized: false
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // Mount our apiRouter
   app.use("/api", apiRouter);
+  app.use("/auth", authRouter);
 
   // Error handling;
   app.use((req, res, next) => {
@@ -81,7 +119,9 @@ const configureApp = () => {
 
 // Main function declaration;
 const bootApp = async () => {
-  await syncDatabase();
+  await sessionStore.sync();
+  //await syncDatabase();
+  await syncDb();
   await configureApp();
 };
 
