@@ -57,8 +57,17 @@ router.post("/", async (req, res, next) => {
   const { title, ingredients } = req.body;
   // Create a campus object
   const bookmarkObj = { ...req.body };
+  // const bookmarks = await Bookmark.findAll();
+  // for (let i =0; i <bookmarks.length; i++){
+  //  if ( bookmarkObj.title === bookmarks[]){
+
+  //  }
+
+  // }
+
   try {
     // Create a new campus on the database
+
     const newBookmark = await Bookmark.create(bookmarkObj);
     // The database would return a campus
     // send that campus as a json to the client

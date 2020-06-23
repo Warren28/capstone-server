@@ -19,6 +19,7 @@
     "express": "~4.16.1",
     "express-session": "^1.17.1",
     "helmet": "^3.23.1",
+    "heroku": "^7.42.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
@@ -29,4 +30,7 @@
   "devDependencies": {
     "nodemon": "^2.0.4"
   }
+  "engines": {
+    "node": "v11.3.0"
+}
 }
